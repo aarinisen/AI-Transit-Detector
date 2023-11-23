@@ -1,1 +1,3 @@
-! python -m pip install lightkurve --upgrade
+$ git clone https://github.com/lightkurve/lightkurve.git
+$ cd lightkurve
+$ python -m pip install .
