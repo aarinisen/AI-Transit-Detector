@@ -11,9 +11,9 @@ np.random.seed(1337)
 #THis makes the random numbers from the numpy file as predictable
 
 class dataGenerator(object):
-    # This line of code creates a blueprint for the data Generator object
+    # This line of code creates a blueprint for the data Generatort
     def __init__(self,**kwargs):
-
+    #These objects are created fromthe class and the self settings, grid and init are defined in kwargs
         self.pgrid = kwargs['pgrid']
         self.settings = kwargs['settings']
         self.init = kwargs['init'] # initial values for transit
@@ -33,22 +33,22 @@ class dataGenerator(object):
         for k in range(len(self.keys)):
             pars[self.keys[k]] = args[k]
 
-        # compute white noise
+        # This line of code computes white noise that contains frequencies with equal intensities.
         noise = pars['rp']**2 / pars['sig_tol']
         ndata = np.random.normal(1, noise, len(self.t))
 
-        # generate transit + variability
+        # Generate transit + variability. This is further used int he equation to generate quasi systemetic trend
         t = self.t - np.min(self.t)
         A = pars['A']+pars['A']*np.sin(2*np.pi*t/pars['PA'])
         w = pars['w']+pars['w']*np.sin(2*np.pi*t/pars['Pw'])
         data = transit(time=self.t, values=pars) * ndata * (1+A*np.sin(2*np.pi*t/w + pars['phi']))
 
-        # add systematic into noise "same distribution different points"
+        # Add systematic into noise "same distribution different points" to stimulate data from telescopes to include a component of unpredictability. Each transit sample has a nontransit which is implied in this equation.
         ndata = np.random.normal(1, noise, len(self.t)) * (1+A*np.sin(2*np.pi*t/w + pars['phi']))
 
         return args,data,ndata
 
-    def generate(self,null=False):
+    def generate(self,null=False): # Defines a genrate as false for the non transit
         plist = [self.pgrid[k] for k in self.keys]
         pvals = list(product(*plist)) # compute cartesian product of N sets
 
