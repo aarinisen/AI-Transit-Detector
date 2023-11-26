@@ -1,19 +1,23 @@
 import pickle
 import numpy as np
+# First, you must import the file in binary form. By importing numpy as np, the user imports a package.
 from ELCA import transit
 import multiprocessing as mp
 from itertools import product
 from sklearn import preprocessing
+# From ECLA, itertools and sklearn, multiple packages get imported such as product preprocessing and the main transit used for gathering the stimulated data 
 
 np.random.seed(1337)
+#THis makes the random numbers from the numpy file as predictable
 
 class dataGenerator(object):
+    # This line of code creates a blueprint for the data Generator object
     def __init__(self,**kwargs):
 
         self.pgrid = kwargs['pgrid']
         self.settings = kwargs['settings']
         self.init = kwargs['init'] # initial values for transit
-
+#Assigns the values for the data Generator
         # order of parameter keys
         self.keys = list(self.pgrid.keys())
 
