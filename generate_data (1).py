@@ -13,7 +13,7 @@ np.random.seed(1337)
 class dataGenerator(object):
     # This line of code creates a blueprint for the data Generatort
     def __init__(self,**kwargs):
-    #These objects are created fromthe class and the self settings, grid and init are defined in kwargs
+    #These objects are created from the class and the self settings, grid, and init are defined in kwargs
         self.pgrid = kwargs['pgrid']
         self.settings = kwargs['settings']
         self.init = kwargs['init'] # initial values for transit
@@ -37,7 +37,7 @@ class dataGenerator(object):
         noise = pars['rp']**2 / pars['sig_tol']
         ndata = np.random.normal(1, noise, len(self.t))
 
-        # Generate transit + variability. This is further used int he equation to generate quasi systemetic trend
+        # Generate transit + variability. This is further used in the equation to generate quasi systemetic trend
         t = self.t - np.min(self.t)
         A = pars['A']+pars['A']*np.sin(2*np.pi*t/pars['PA'])
         w = pars['w']+pars['w']*np.sin(2*np.pi*t/pars['Pw'])
@@ -52,9 +52,10 @@ class dataGenerator(object):
         plist = [self.pgrid[k] for k in self.keys]
         pvals = list(product(*plist)) # compute cartesian product of N sets
 
-        # evaluate all of the transits with multiprocessing
+        # Evaluate all of the transits with multiprocessing
         pool = mp.Pool()
         self.results = np.array( pool.starmap(self.super_worker, pvals) )
+        # Generates the results in which out of the array, and in the staramp data is the instance of the super worker class.
         pool.close()
         pool.join()
 
@@ -67,7 +68,7 @@ class dataGenerator(object):
         
 arr = lambda x : np.array( list(x),dtype=np.float )
 def load_data(fname='transit_data_train.pkl',categorical=False,whiten=True,DIR='pickle_data/'):
-
+# Creates an array containing the list data from the array and the type equal to the float type.
     data = pickle.load(open(DIR+fname,'rb'))
 
     # convert to numpy array fo float type from object type
@@ -77,17 +78,17 @@ def load_data(fname='transit_data_train.pkl',categorical=False,whiten=True,DIR='
 
     X = np.vstack([transits,null])
     y = np.hstack([np.ones(transits.shape[0]), np.zeros(null.shape[0])] )
-
+# Gnerates the x-axis and y-axis data from the stacks and shapes.
     if categorical: y = np_utils.to_categorical(y, np.unique(y).shape[0] )
     if whiten: X = preprocessing.scale(X,axis=1)
-
+#categorizes conditions of x and y as categorical and whiten
     return X,y,pvals,data['keys'],data['time']
 
 
 if __name__ == "__main__":
 
     # Generate time data
-    settings = { 'ws':360, 'dt':2 }
+    settings = { 'ws':300, 'dt':2 }
     # window size (ws/dt = num pts) (MINUTES)
     # time step (observation cadence) (MINUTES)
     npts = settings['ws']/settings['dt']
@@ -123,14 +124,14 @@ if __name__ == "__main__":
 
     pgrid_test = {
         # TEST data
-        'rp': (np.array([200,500,1000,2500,5000,10000])/1e6)**0.5, # transit depth (ppm) -> Rp/Rs
+        'rp': (np.array([100,200,400,800,16000,32000])/1e6)**0.5, # transit depth (ppm) -> Rp/Rs
         'per':np.linspace(*[2,4,5]),
         'inc':np.array([86,87,90]),
         'sig_tol':np.linspace(*[0.25,3,12]), # generate noise based on X times the tdepth
 
         # stellar variability systematics
         'phi':np.linspace(*[0,np.pi,4]),
-        'A': np.array([250,500,1000,2000])/1e6,
+        'A': np.array([100,200,400,800])/1e6,
         'w': np.array([6,12,24])/24., # periods in days
         'PA': [-4*dt,4*dt,100], # doubles amp, zeros amp between min time and max time, 1000=no amplitude change
         'Pw': [-12*dt,4*dt,100], #-12dt=period halfs, 4dt=period doubles, 1000=no change
