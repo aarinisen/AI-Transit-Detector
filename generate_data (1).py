@@ -71,14 +71,14 @@ def load_data(fname='transit_data_train.pkl',categorical=False,whiten=True,DIR='
 # Creates an array containing the list data from the array and the type equal to the float type.
     data = pickle.load(open(DIR+fname,'rb'))
 
-    # convert to numpy array fo float type from object type
+    # convert to numpy array to float type from object type
     pvals = arr(data['results'][:,0])
     transits = arr(data['results'][:,1])
     null = arr(data['results'][:,2])
 
     X = np.vstack([transits,null])
     y = np.hstack([np.ones(transits.shape[0]), np.zeros(null.shape[0])] )
-# Gnerates the x-axis and y-axis data from the stacks and shapes.
+# Generates the x-axis and y-axis data from the stacks and shapes.
     if categorical: y = np_utils.to_categorical(y, np.unique(y).shape[0] )
     if whiten: X = preprocessing.scale(X,axis=1)
 #categorizes conditions of x and y as categorical and whiten
