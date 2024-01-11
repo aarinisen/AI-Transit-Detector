@@ -4,6 +4,7 @@ import pickle
 import numpy as np
 import matplotlib.pyplot as plt
 from sklearn import preprocessing
+# Import the objects from the layers
 from tensorflow.keras.layers import Input, Dense, Conv1D, AveragePooling1D, Concatenate, Flatten, Dropout
 from tensorflow.keras.models import Model
 from tensorflow.keras.optimizers import SGD
