@@ -37,10 +37,10 @@ class dataGenerator(object):
         noise = pars['rp']**2 / pars['sig_tol']
         ndata = np.random.normal(1, noise, len(self.t))
 
-        # Generate transit + variability. This is further used in the equation to generate quasi systemetic trend
-        t = self.t - np.min(self.t)
-        A = pars['A']+pars['A']*np.sin(2*np.pi*t/pars['PA'])
-        w = pars['w']+pars['w']*np.sin(2*np.pi*t/pars['Pw'])
+        # Generate transit and variability. This is further used in the equation to generate quasi systemetic trend. This is from the equation->quasi systemic trend.
+        t = self.t - np.min(self.t)#time
+        w = pars['w']*np.sin(2*np.pi*t/pars['Pw'])+pars['w']#Width
+        A = pars['A']*np.sin(2*np.pi*t/pars['PA'])+pars['A']#Amplitude
         data = transit(time=self.t, values=pars) * ndata * (1+A*np.sin(2*np.pi*t/w + pars['phi']))
 
         # Add systematic into noise "same distribution different points" to stimulate data from telescopes to include a component of unpredictability. Each transit sample has a nontransit which is implied in this equation.
