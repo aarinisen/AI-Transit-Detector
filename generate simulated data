@@ -3,6 +3,12 @@
 #-----------------------------IMPORTS Path of the package-> Phyton----------------------------------
 
 import pickle
+import numpy as np
+# First, you must import the file in binary form. By importing numpy as np, the user imports a package.
+from ELCA import transit
+import multiprocessing as mp
+from itertools import product
+from sklearn import preprocessingimport pickle
 import module
 import numpy
 
